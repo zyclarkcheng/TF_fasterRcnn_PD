@@ -1,0 +1,50 @@
+Before you choose to train a model or test images
+since our project is based on Neural Network, so a Nvidia GPU is needed, then you should install cuda and cudnn package from Nvidia Website, 
+1 pip install tensorflow-gpu
+2 pip install cython
+3 pip install opencv-python
+4 pip install easydic
+5 we will compile cython module to acquire some helpful function for CNN , so make sure which version gpu is on your computer,e.g.
+TitanX (Maxwell/Pascal)		sm_52
+Grid K520 (AWS g2.2xlarge)	sm_30
+Tesla K80 (AWS p2.xlarge)	sm_37
+GTX 1060 1070 1080		sm_61
+then revise sm_code in ./cvProject/lib/make.sh
+
+make 
+
+Then you can choose to test or train
+------------------------------------------------------------
+If you want to test with images
+
+download our trained model
+https://drive.google.com/open?id=0B66hkVtpe11cMTF0VVUwZ1Zzcjg
+
+place the model under ./cvProject/data
+revise the model path in .cvProject1/faster_rcnn/demo.py
+
+python ./cvProject1/faster_rcnn/demo.py
+
+
+------------------------------------------------------------
+If you want to train on pascal-voc image set:
+cd $cvProject1/data
+
+1 Download the training, validation, test data and VOCdevkit
+wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtrainval_06-Nov-2007.tar
+wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCtest_06-Nov-2007.tar
+wget http://host.robots.ox.ac.uk/pascal/VOC/voc2007/VOCdevkit_08-Jun-2007.tar
+
+2 Extract all of these tars into one directory named VOCdevkit
+tar xvf VOCtrainval_06-Nov-2007.tar
+tar xvf VOCtest_06-Nov-2007.tar
+tar xvf VOCdevkit_08-Jun-2007.tar
+3 rename file VOCdekit to VOCdekit2007
+
+4 Download pre-trained model VGG16 and put it in the path ./data/pretrain_model/VGG_imagenet.npy
+link   https://drive.google.com/file/d/0ByuDEGFYmWsbNVF5eExySUtMZmM/view
+
+5 Run training script
+cd $cvProject1
+python ./faster_rcnn/train_net.py --gpu 0 --weights ./data/pretrain_model/VGG_imagenet.npy --imdb voc_2007_trainval --iters 150000 --cfg  ./experiments/cfgs/faster_rcnn_end2end.yml --network VGGnet_train --set EXP_DIR exp_dir
+
